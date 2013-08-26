@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define ProductVersion = "!(bind.FileVersion.XsltpluginDLL)"?>
+<?define ProductUpgradeCode = "80d37a22-9e64-406e-add6-690efcaa15c5"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
+  <Product Id="3ba2d15d-75bd-4916-a023-71c5afa13572" Name="WLWXsltPlugin" Language="1033" Version="$(var.ProductVersion)" Manufacturer="GKSoft"  UpgradeCode="$(var.ProductUpgradeCode)">
+    <Package InstallerVersion="200" Compressed="yes" Comments="WLW XsltPlugin Installer" Description="WLWXsltPlugin" />
+    
+    <Condition Message='You need to be an administrator to install this product.'>Privileged</Condition>
+    
+    <Media Id="1" Cabinet="xsltplugin.cab" EmbedCab="yes" />
+    <!--set some properties-->
+    <Property Id="ARPHELPLINK" Value="http://code-d-code.blogspot.com"/>
+    <Property Id="ARPURLINFOABOUT" Value="http://code-d-code.blogspot.com"/>
+
+    <!--install for all users-->
+    <Property Id="ALLUSERS">1</Property>
+    <!--<Property Id="FILEEXISTS">     
+      <DirectorySearch Id="CheckFileDir" Path="[INSTALLDIR]" Depth="0">
+        <FileSearch Id="CheckFile" Name="WindowsLiveWriter.exe.config" />
+        
+      </DirectorySearch>      
+    </Property>-->
+
+    
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="WindowsLive" Name="Windows Live">
+          <Directory Id="Writer" Name="Writer">
+            <Directory Id="Plugins" Name="Plugins">
+              <Directory Id="INSTALLLOCATION">
+                <!-- xsltplugin.dll -->
+                <Component Id="XsltPluginComponent" Guid="d4b0782b-9035-43ce-8a46-1c797555d765" Permanent="no">
+                  <File Id='XsltpluginDLL' Name='XsltPlugin.dll' DiskId='1' Source='..\Plugin\bin\Release\XsltPlugin.dll' KeyPath='yes' />
+                </Component>
+                <!--xsltplugin.dll.config-->
+                <Component Id="XsltPluginConfigComponent" Guid="ea5dc160-010a-40e8-b589-ab3335ef5089" Permanent="no">
+                  <File Id='XsltpluginDLLConfig' Name='XsltPlugin.dll.config' DiskId='1' Source='..\Plugin\bin\Release\XsltPlugin.dll.config' KeyPath='yes' />
+                </Component>
+              </Directory>
+            </Directory>
+
+            <!--<Directory Id='wlwconfig'>
+              <Component Id="WLWConfigComponent" Guid="268dd10f-4273-40cf-bd7f-d187198db5a6" KeyPath="yes" Permanent="no">
+
+                <util:XmlConfig Id='XsltPlugin1' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='element' Name='configSections' ElementPath='/configuration' Sequence='1'  On='install' VerifyPath='/configuration/configSections' />
+                <util:XmlConfig Id='XsltPlugin2' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='element' Name='section' ElementPath='/configuration/configSections' Sequence='2' On='install' VerifyPath='/configuration/configSections/section'/>
+                <util:XmlConfig Id='XsltPlugin3' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='value' Name='name' Value='XsltPlugin' ElementPath='/configuration/configSections/section' Sequence='3' On='install' VerifyPath='/configuration/configSections/section' />
+                <util:XmlConfig Id='XsltPlugin4' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='value' Name='type' Value='XsltPlugin.Config.XsltConfigSection, XsltPlugin' ElementPath='/configuration/configSections/section' Sequence='4' On='install' VerifyPath='/configuration/configSections/section' />
+
+                <util:XmlConfig Id='XsltPlugin5' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='element' Name='XsltPlugin'  Sequence='5' On='install' ElementPath='/configuration' VerifyPath='/configuration/XsltPlugin'/>
+                <util:XmlConfig Id='XsltPlugin6' File='[ProgramFilesFolder]Windows Live\Writer\WindowsLiveWriter.exe.config' Action='create' Node='value' Name='configSource' Value='Plugins\XsltPlugin.dll.config' ElementPath='/configuration/XsltPlugin' Sequence='6' On='install' VerifyPath='/configuration/XsltPlugin' />
+              </Component>
+            </Directory>-->
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+
+    <Feature Id="ProductFeature" Title="XsltPlugin" Level="1" >
+      <!-- TODO: Remove the comments around this ComponentRef element and the Component above in order to add resources to this installer. -->
+      <ComponentRef Id="XsltPluginComponent" />
+      <ComponentRef Id="XsltPluginConfigComponent" />
+      <!--<ComponentRef Id="WLWConfigComponent" />-->
+
+      <!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->
+      <ComponentGroupRef Id="Product.Generated" />
+    </Feature>
+
+    <!--<Upgrade Id="$(var.ProductUpgradeCode)">
+      <UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/>
+      <UpgradeVersion Minimum="0.0.0" Maximum="$(var.ProductVersion)" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED"/>
+    </Upgrade>
+    <Condition Message="A newer version of this software is already installed.">NOT NEWERVERSIONDETECTED</Condition>-->
+
+    <Upgrade Id="$(var.ProductUpgradeCode)">
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+      <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
+    </Upgrade>
+
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

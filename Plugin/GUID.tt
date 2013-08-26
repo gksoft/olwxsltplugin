@@ -1,0 +1,16 @@
+﻿<#@ import namespace = "System.Text.RegularExpressions"  #>
+<#@ template debug="true" language="C#v3.5"  #>
+<#@ Import Namespace="System.Linq" #>
+<#@ Assembly Name="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" #>
+<#@ output extension=".cs" #>
+
+<#
+    WriteLine(GenerateGUID());
+#>
+
+<#+
+private string GenerateGUID()
+{
+	return System.Guid.NewGuid().ToString();
+}
+#>
