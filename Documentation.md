@@ -1,0 +1,1 @@
+Get more info at http://code-d-code.blogspot.com/2012/02/xslt-plugin-for-windows-live-writer.html
